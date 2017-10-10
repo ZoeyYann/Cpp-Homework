@@ -1,0 +1,27 @@
+//给定一串原始数据串n，数据串由01组成。计算添加海明校验位之后的编码数据。题目采用偶校验方式。最终编码长度不超过100。  
+/*
+Input:  
+10011101  
+Output:
+111000111101
+*/
+#include <iostream>
+#include <string>
+using namespace std;
+
+int main() {
+	int rlen, hlen;
+	string res;
+    cin >> res;
+	rlen = res.length();
+	for (hlen = 1; rlen + hlen + 1 > (1 << hlen); hlen++);
+	for (int i = 0; i < hlen; i++)
+		res.insert((1 << i) - 1, "0");
+	for (int i = 0, tag = 0; i < hlen; i++) {
+		for (int j = (1 << i) - 1; j < rlen + hlen; j++)
+			if (((j + 1) >> i) & 0x1)
+				tag = tag ^ (res[j] - '0');
+		res[(1 << i) - 1] = tag + '0';
+	}
+    cout << res;
+}
